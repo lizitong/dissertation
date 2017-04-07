@@ -65,26 +65,7 @@ def filterZeros(record):
 		return False
 	else:
 		return 	True
-"""
-def genBallTree():
-	minX = -74.260
-	maxX = -73.690
-	minY = 40.477
-	maxY = 40.918
-	x = minX
-	y = minY
-	elements = []
-	while x <= maxX:
-		x = round(x,3)
-		y = minY
-		while y <= maxY:
-			y = round(y,3)
-			elements.append([x,y])
-			y += 0.001
-		x += 0.001
-	ballTree = BallTree(elements, metric="haversine")
-	return (ballTree, elements)
-"""
+
 def findNeighors(row):
 	ballTree = ballTreeBC.value
 	elements = elementsBC.value
@@ -114,8 +95,17 @@ if __name__ == "__main__":
 
 	csvPaths = []
 	#csvPaths.append("/taxidata/green/green_tripdata_2015-01.csv")
-	csvPaths.append("/taxidata/green/test.csv")
-	allResults = sc.emptyRDD()
+	#csvPaths.append("/taxidata/green/test.csv")
+	for i in range(1, 13):
+		if i < 10:
+			month = "0"+str(i)
+		else: month = str(i)
+		#green_tripdata_2015-01.csv
+		path = "/taxidata/green/green_tripdata_2015-" + month + ".csv"
+		csvPaths.append(path)
+		path2 = "/taxidata/yellow/yellow_tripdata_2015-" + month + ".csv"
+		csvPaths.append(path2)
+	#allResults = sc.emptyRDD()
 	for path in csvPaths:
 		#rdd = sc.textFile(path)
 		trips = sc.textFile(path).map(lambda line:line.split(",")).filter(deleteInvalidLines)
